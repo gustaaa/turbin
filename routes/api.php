@@ -3,7 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
-
+use App\Http\Controllers\Api\Input1Controller;
+use App\Http\Controllers\Api\Input2Controller;
+use App\Http\Controllers\Api\Input3Controller;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -21,3 +23,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::apiResource('/input1', Input1Controller::class);
+    Route::apiResource('/input2', Input2Controller::class);
+    Route::apiResource('/input3', Input3Controller::class);
+});
