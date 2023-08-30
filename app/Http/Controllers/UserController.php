@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Storage;
+use PDF;
 
 
 class UserController extends Controller
@@ -33,8 +34,6 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-
-
         // mengambil data
         $users = DB::table('users')
             ->when($request->input('name'), function ($query, $name) {
@@ -64,7 +63,7 @@ class UserController extends Controller
             'gambar' => 'required',
             'role' => 'required',
         ]);
-
+        $image_name = '';
         if ($request->file('gambar')) {
             $image_name = $request->file('gambar')->store('images', 'public');
         }
@@ -78,7 +77,7 @@ class UserController extends Controller
         $user->role = $request->get('role');
 
         $user->save();
-        return redirect(route('user.index'))->with('success', 'Data Berhasil Ditambahkan');;
+        return redirect(route('user.index'))->with('success', 'Data Berhasil Ditambahkan');
     }
 
     /**
@@ -197,5 +196,11 @@ class UserController extends Controller
 
         Alert::success('Success', 'Password successfully changed!');
         return redirect()->route('user.edit', $user->id);
+    }
+    public function laporan()
+    {
+        $user = User::all();
+        $pdf = PDF::loadview('users.laporan', compact('user'));
+        return $pdf->stream();
     }
 }

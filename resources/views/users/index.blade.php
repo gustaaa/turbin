@@ -13,7 +13,6 @@
     </div>
     <div class="section-body">
         <h2 class="section-title" data-id="titleUserManagement">User Management</h2>
-
         <div class="row">
             <div class="col-12">
                 @include('layouts.alert')
@@ -25,11 +24,12 @@
                     <div class="card-header">
                         <h4 data-id="userListData">User List</h4>
                         <div class="card-header-action">
-                            <a class="btn btn-icon icon-left btn-primary" data-id="userAdd" href="{{ route('user.create') }}">Create New
-                                User</a>
-                            <a class="btn btn-info btn-primary active import">
-                                <i class="fa fa-download" aria-hidden="true"></i>
-                                Import User</a>
+                            <a class="btn btn-info icon-left btn-primary" data-id="userAdd" href="{{ route('user.create') }}">
+                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                Create New User</a>
+                            <a class="btn btn-info btn-primary active" href="{{ url('/laporan/user') }}">
+                                <i class="fa fa-upload" aria-hidden="true"></i>
+                                Download User</a>
                             <a class="btn btn-info btn-primary active" href="{{ route('user.export') }}">
                                 <i class="fa fa-upload" aria-hidden="true"></i>
                                 Export User</a>
@@ -39,19 +39,6 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="show-import" style="display: none">
-                            <div class="custom-file">
-                                <form action="{{ route('user.import') }}" method="post" enctype="multipart/form-data">
-                                    {{ csrf_field() }}
-                                    <label class="custom-file-label" for="file-upload">Choose File</label>
-                                    <input type="file" id="file-upload" class="custom-file-input" name="import_file">
-                                    <br /> <br />
-                                    <div class="footer text-right">
-                                        <button class="btn btn-primary">Import File</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
                         <div class="show-search mb-3" style="display: none">
                             <form id="search" method="GET" action="{{ route('user.index') }}">
                                 <div class="form-row">

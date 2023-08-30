@@ -10,19 +10,20 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 class UsersExport implements FromCollection, WithHeadings, ShouldAutoSize
 {
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * @return \Illuminate\Support\Collection
+     */
     public function collection()
     {
-        return User::Select('id','name','email','password')->get();
+        return User::Select('id', 'name', 'username', 'email', 'role')->get();
     }
     public function headings(): array
     {
         return [
             'ID',
             'Name',
+            'Username',
             'Email',
-            'Password'
+            'Role'
         ];
     }
 }
