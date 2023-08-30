@@ -23,7 +23,7 @@
             <div class="col-12">
                 <div class="card card-primary">
                     <div class="card-header">
-                        <h4 data-id="input1ListData">Menu Input 1
+                        <h4 data-id="input1ListData">Menu Input 3
                             <br>
                             <span style="font-size: 13px;">Tanggal: {{ \Carbon\Carbon::parse($selectedDate)->format('d M Y') }}</span>
                         </h4>
