@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class Input2 extends Model
 {
-    use HasFactory;
+    use HasApiTokens, HasFactory, Notifiable;
     protected $table = "input2"; // Eloquent akan membuat model Barang menyimpan record di tabel barang
     protected $primaryKey = 'id';
     /**
@@ -42,5 +44,9 @@ class Input2 extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function report()
+    {
+        return $this->hasMany(Report::class);
     }
 }
