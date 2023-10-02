@@ -171,6 +171,7 @@ return [
         Maatwebsite\Excel\ExcelServiceProvider::class,
         RealRashid\SweetAlert\SweetAlertServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
+        Illuminate\Foundation\Providers\FormRequestServiceProvider::class,
     ])->toArray(),
 
     /*

@@ -29,6 +29,7 @@ class Input3 extends Model
         'load_limit',
         'flo_in',
         'flo_out',
+        'status',
     ];
     protected $casts = [
         'temp_water_in' => 'double',
@@ -41,7 +42,36 @@ class Input3 extends Model
         'load_limit' => 'double',
         'flo_in' => 'double',
         'flo_out' => 'double',
+        'status' => 'integer',
     ];
+    // Tambahkan mutator untuk kolom "status"
+    public function setStatusAttribute($value)
+    {
+        $columns = [
+            'temp_water_in',
+            'temp_water_out',
+            'temp_oil_in',
+            'temp_oil_out',
+            'vacum',
+            'injector',
+            'speed_drop',
+            'load_limit',
+            'flo_in',
+            'flo_out',
+        ];
+
+        $allColumnsAreZero = true;
+
+        foreach ($columns as $column) {
+            if ($this->$column != 0) {
+                $allColumnsAreZero = false;
+                break;
+            }
+        }
+
+        $this->attributes['status'] = $allColumnsAreZero ? 0 : 1;
+    }
+
     protected $hidden = [
         'user_id',
     ];

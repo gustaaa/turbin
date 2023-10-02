@@ -12,9 +12,15 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
+        // input otomatis
         $schedule->command('app:insert-input1')->dailyAt('02:00');
         $schedule->command('app:insert-input2')->dailyAt('02:00');
         $schedule->command('app:insert-input3')->dailyAt('02:00');
+
+        // update status otomatis
+        $schedule->command('app:update-status-input1')->everyMinute();
+        $schedule->command('app:update-status-input2')->everyMinute();
+        $schedule->command('app:update-status-input3')->everyMinute();
     }
 
     /**

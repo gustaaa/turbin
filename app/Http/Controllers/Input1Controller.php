@@ -47,7 +47,7 @@ class Input1Controller extends Controller
                 'wb_gen_side',
                 'oc_lub_oil_outlet'
             )
-            ->paginate(10);
+            ->paginate(24);
         return view('menu-input.input1.index', compact('input1', 'selectedDate'));
     }
     public function create()
@@ -90,6 +90,7 @@ class Input1Controller extends Controller
         $input1->oc_lub_oil_outlet = $request->get('oc_lub_oil_outlet');
 
         $input1->save();
+        $input1 = $input1->status;
         return redirect(route('input1.index'))->with('success', 'Data Berhasil Ditambahkan');;
     }
 
@@ -139,8 +140,21 @@ class Input1Controller extends Controller
             'oc_lub_oil_outlet' => 'required',
         ]);
 
-        Input1::find($id)->update($request->all());
+        $input1 = Input1::find($id);
 
+        $input1->inlet_steam = $request->get('inlet_steam');
+        $input1->exm_steam = $request->get('exm_steam');
+        $input1->turbin_thrust_bearing = $request->get('turbin_thrust_bearing');
+        $input1->tb_gov_side = $request->get('tb_gov_side');
+        $input1->tb_coup_side = $request->get('tb_coup_side');
+        $input1->pb_tbn_side = $request->get('pb_tbn_side');
+        $input1->pb_gen_side = $request->get('pb_gen_side');
+        $input1->wb_tbn_side = $request->get('wb_tbn_side');
+        $input1->wb_gen_side = $request->get('wb_gen_side');
+        $input1->oc_lub_oil_outlet = $request->get('oc_lub_oil_outlet');
+
+        $input1->save();
+        $input1 = $input1->status;
         return redirect()->route('input1.index')->with('success', 'Input1 Berhasil Diupdate');
     }
 

@@ -44,7 +44,7 @@ class Input2Controller extends Controller
                 'lub_oil',
                 'control_oil',
             )
-            ->paginate(10);
+            ->paginate(24);
         return view('menu-input.input2.index', compact('input2', 'selectedDate'));
     }
     public function create()
@@ -129,8 +129,9 @@ class Input2Controller extends Controller
             'control_oil' => 'required',
         ]);
 
-        Input2::find($id)->update($request->all());
-
+        $input2 = Input2::find($id)->update($request->all());
+        $input2->save();
+        $input2 = $input2->status;
         return redirect()->route('input2.index')->with('success', 'Input2 Berhasil Diupdate');
     }
 

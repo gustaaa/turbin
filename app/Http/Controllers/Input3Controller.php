@@ -47,7 +47,7 @@ class Input3Controller extends Controller
                 'flo_in',
                 'flo_out',
             )
-            ->paginate(10);
+            ->paginate(24);
         return view('menu-input.input3.index', compact('input3', 'selectedDate'));
     }
     public function create()
@@ -138,7 +138,9 @@ class Input3Controller extends Controller
             'flo_out' => 'required',
         ]);
 
-        Input3::find($id)->update($request->all());
+        $input3 = Input3::find($id)->update($request->all());
+        $input3->save();
+        $input3 = $input3->status;
 
         return redirect()->route('input3.index')->with('success', 'input3 Berhasil Diupdate');
     }

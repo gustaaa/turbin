@@ -27,6 +27,7 @@ class Input2 extends Model
         'exhaust',
         'lub_oil',
         'control_oil',
+        'status',
     ];
     protected $casts = [
         'turbin_speed' => 'double',
@@ -37,7 +38,34 @@ class Input2 extends Model
         'exhaust' => 'double',
         'lub_oil' => 'double',
         'control_oil' => 'double',
+        'status' => 'integer',
     ];
+    // Tambahkan mutator untuk kolom "status"
+    public function setStatusAttribute($value)
+    {
+        $columns = [
+            'turbin_speed',
+            'rotor_vib_monitor',
+            'axial_displacement_monitor',
+            'main_steam',
+            'stage_steam',
+            'exhaust',
+            'lub_oil',
+            'control_oil',
+        ];
+
+        $allColumnsAreZero = true;
+
+        foreach ($columns as $column) {
+            if ($this->$column != 0) {
+                $allColumnsAreZero = false;
+                break;
+            }
+        }
+
+        $this->attributes['status'] = $allColumnsAreZero ? 0 : 1;
+    }
+
     protected $hidden = [
         'user_id',
     ];
