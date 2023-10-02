@@ -62,6 +62,7 @@ class InsertInput2 extends Command
                 'exhaust' => 0,
                 'lub_oil' => 0,
                 'control_oil' => 0,
+                'status' => 0,
                 'created_at' => $nextHour,
                 'updated_at' => $nextHour,
             ]);

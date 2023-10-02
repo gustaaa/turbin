@@ -64,6 +64,7 @@ class InsertInput3 extends Command
                 'load_limit' => 0,
                 'flo_in' => 0,
                 'flo_out' => 0,
+                'status' => 0,
                 'created_at' => $nextHour,
                 'updated_at' => $nextHour,
             ]);

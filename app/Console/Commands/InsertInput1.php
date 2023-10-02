@@ -64,6 +64,7 @@ class InsertInput1 extends Command
                 'wb_tbn_side' => 0,
                 'wb_gen_side' => 0,
                 'oc_lub_oil_outlet' => 0,
+                'status' => 0,
                 'created_at' => $nextHour,
                 'updated_at' => $nextHour,
             ]);
