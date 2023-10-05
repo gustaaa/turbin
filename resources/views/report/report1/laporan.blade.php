@@ -50,7 +50,7 @@
                 </tr>
                 @foreach($report1 as $key => $data)
                 <tr>
-                    <td>{{$data->created_at->format('H:00')}}</td>
+                    <td>{{$data->created_at->modify('+1 hour')->format('H:00')}}</td>
                     <td>{{$data->inlet_steam}}</td>
                     <td>{{$data->exm_steam}}</td>
                     <td>{{$data->turbin_thrust_bearing}}</td>

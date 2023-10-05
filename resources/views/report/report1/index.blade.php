@@ -70,12 +70,12 @@
                                         <th data-id="thWBTbnSide">WB tbn side</th>
                                         <th data-id="thWBGenSide">WB gen side</th>
                                         <th data-id="thOCLubOilOutlet">OC lub oil outlet</th>
-
+                                        <th class="text-center">Action</th>
                                     </tr>
                                     @foreach($report1 as $key => $data)
                                     <tr>
-                                        <td>{{ ($report1->currentPage() - 1) * $report1->perPage() + $loop->iteration }}</td>
-                                        <td>{{$data->created_at}}</td>
+                                        <td>{{ ($loop->index + 1) }}</td>
+                                        <td>{{$data->created_at->modify('+1 hour')->format('H:00')}}</td>
                                         <td>{{$data->inlet_steam}}</td>
                                         <td>{{$data->exm_steam}}</td>
                                         <td>{{$data->turbin_thrust_bearing}}</td>
@@ -86,14 +86,18 @@
                                         <td>{{$data->wb_tbn_side}}</td>
                                         <td>{{$data->wb_gen_side}}</td>
                                         <td>{{$data->oc_lub_oil_outlet}}</td>
-
+                                        <td class="text-center">
+                                            <div class="d-flex justify-content-center">
+                                                <a href="{{ route('report1.edit', $data->id) }}" data-id="editInput131" class="btn btn-sm btn-info btn-icon mr-2">
+                                                    <i class="fas fa-edit"></i>
+                                                    Edit
+                                                </a>
+                                            </div>
+                                        </td>
                                     </tr>
                                     @endforeach
                                 </tbody>
                             </table>
-                            <div class="d-flex justify-content-center">
-                                {{ $report1->withQueryString()->links() }}
-                            </div>
                         </div>
                     </div>
                 </div>
