@@ -53,7 +53,7 @@
                 @foreach($input3 as $key => $data)
                 <tr>
 
-                    <td>{{$data->created_at->format('H:00')}}</td>
+                    <td>{{$data->created_at->modify('+1 hour')->format('H:00')}}</td>
                     <td>{{$data->temp_water_in}}</td>
                     <td>{{$data->temp_water_out}}</td>
                     <td>{{$data->temp_oil_in}}</td>

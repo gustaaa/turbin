@@ -71,12 +71,12 @@
                                         <th data-id="thLoadLimit">Load Limit</th>
                                         <th data-id="thFLOIn">FLO In</th>
                                         <th data-id="thFLOOut">FLO Out</th>
-
+                                        <th class="text-center">Action</th>
                                     </tr>
                                     @foreach($report3 as $key => $data)
                                     <tr>
-                                        <td>{{ ($report3->currentPage() - 1) * $report3->perPage() + $loop->iteration }}</td>
-                                        <td>{{$data->created_at}}</td>
+                                        <td>{{ ($loop->index + 1) }}</td>
+                                        <td>{{$data->created_at->modify('+1 hour')->format('H:00')}}</td>
                                         <td>{{$data->temp_water_in}}</td>
                                         <td>{{$data->temp_water_out}}</td>
                                         <td>{{$data->temp_oil_in}}</td>
@@ -87,14 +87,19 @@
                                         <td>{{$data->load_limit}}</td>
                                         <td>{{$data->flo_in}}</td>
                                         <td>{{$data->flo_out}}</td>
-
+                                        <td class="text-center">
+                                            <div class="d-flex justify-content-center">
+                                                <a href="{{ route('report3.edit', $data->id) }}" data-id="editInput131" class="btn btn-sm btn-info btn-icon mr-2">
+                                                    <i class="fas fa-edit"></i>
+                                                    Edit
+                                                </a>
+                                            </div>
+                                        </td>
                                     </tr>
                                     @endforeach
                                 </tbody>
                             </table>
-                            <div class="d-flex justify-content-center">
-                                {{ $report3->withQueryString()->links() }}
-                            </div>
+
                         </div>
                     </div>
                 </div>

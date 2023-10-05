@@ -21,26 +21,62 @@ class ReportInput3Controller extends Controller
         if (!$selectedDate) {
             $selectedDate = now()->format('Y-m-d');
         }
-        $report3 = DB::table('input3')
-            ->when($selectedDate, function ($query) use ($selectedDate) {
-                return $query->whereDate('created_at', $selectedDate);
-            })
-            ->select(
-                'id',
-                DB::raw("DATE_FORMAT(created_at, '%H:%i') as created_at"),
-                'temp_water_in',
-                'temp_water_out',
-                'temp_oil_in',
-                'temp_oil_out',
-                'vacum',
-                'injector',
-                'speed_drop',
-                'load_limit',
-                'flo_in',
-                'flo_out',
-            )
-            ->paginate(10);
+        // Load data for hours 7 to 23
+        $input3 = Input3::whereDate('created_at', $selectedDate)
+            ->whereTime('created_at', '>=', '06:00:00')
+            ->whereTime('created_at', '<=', '23:59:59')
+            ->get();
+
+        // Load data for hours 0 to 6, but consider it as a previous day's data
+        // $previousDate = Carbon::parse($selectedDate)->subDay();
+        // Load data for hours 0 to 6, but consider it as a next day's data
+        $nextDate = Carbon::parse($selectedDate)->addDay();
+        $input3Midnight = Input3::whereDate('created_at', $nextDate)
+            ->whereTime('created_at', '>=', '00:00:00')
+            ->whereTime('created_at', '<=', '05:59:59')
+            ->get();
+
+        // Combine the data for hours 7 to 23 and hours 0 to 6
+        $report3 = $input3->concat($input3Midnight);
         return view('report.report3.index', compact('report3', 'selectedDate'));
+    }
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        $input3 = Input3::find($id);
+        return view('report.report3.edit', compact('input3'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'temp_water_in' => 'required',
+            'temp_water_out' => 'required',
+            'temp_oil_in' => 'required',
+            'temp_oil_out' => 'required',
+            'vacum' => 'required',
+            'injector' => 'required',
+            'speed_drop' => 'required',
+            'load_limit' => 'required',
+            'flo_in' => 'required',
+            'flo_out' => 'required',
+        ]);
+
+        Input3::find($id)->update($request->all());
+
+        return redirect()->route('report3.index')->with('success', 'input3 Berhasil Diupdate');
     }
     public function laporan(Request $request)
     {
