@@ -51,7 +51,7 @@
                 @foreach($input2 as $key => $data)
                 <tr>
 
-                    <td>{{$data->created_at->format('H:00')}}</td>
+                    <td>{{$data->created_at->modify('+1 hour')->format('H:00')}}</td>
                     <td>{{$data->turbin_speed}}</td>
                     <td>{{$data->rotor_vib_monitor}}</td>
                     <td>{{$data->axial_displacement_monitor}}</td>

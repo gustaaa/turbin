@@ -21,24 +21,60 @@ class ReportInput2Controller extends Controller
         if (!$selectedDate) {
             $selectedDate = now()->format('Y-m-d');
         }
-        $report2 = DB::table('input2')
-            ->when($selectedDate, function ($query) use ($selectedDate) {
-                return $query->whereDate('created_at', $selectedDate);
-            })
-            ->select(
-                'id',
-                DB::raw("DATE_FORMAT(created_at, '%H:%i') as created_at"),
-                'turbin_speed',
-                'rotor_vib_monitor',
-                'axial_displacement_monitor',
-                'main_steam',
-                'stage_steam',
-                'exhaust',
-                'lub_oil',
-                'control_oil',
-            )
-            ->paginate(10);
+        // Load data for hours 7 to 23
+        $input2 = Input2::whereDate('created_at', $selectedDate)
+            ->whereTime('created_at', '>=', '06:00:00')
+            ->whereTime('created_at', '<=', '23:59:59')
+            ->get();
+
+        // Load data for hours 0 to 6, but consider it as a previous day's data
+        // $previousDate = Carbon::parse($selectedDate)->subDay();
+        // Load data for hours 0 to 6, but consider it as a next day's data
+        $nextDate = Carbon::parse($selectedDate)->addDay();
+        $input2Midnight = Input2::whereDate('created_at', $nextDate)
+            ->whereTime('created_at', '>=', '00:00:00')
+            ->whereTime('created_at', '<=', '05:59:59')
+            ->get();
+
+        // Combine the data for hours 7 to 23 and hours 0 to 6
+        $report2 = $input2->concat($input2Midnight);
         return view('report.report2.index', compact('report2', 'selectedDate'));
+    }
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        $input2 = Input2::find($id);
+        return view('report.report2.edit', compact('input2'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'turbin_speed' => 'required',
+            'rotor_vib_monitor' => 'required',
+            'axial_displacement_monitor' => 'required',
+            'main_steam' => 'required',
+            'stage_steam' => 'required',
+            'exhaust' => 'required',
+            'lub_oil' => 'required',
+            'control_oil' => 'required',
+        ]);
+
+        Input2::find($id)->update($request->all());
+
+        return redirect()->route('report2.index')->with('success', 'Input2 Berhasil Diupdate');
     }
     public function laporan(Request $request)
     {
