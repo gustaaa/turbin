@@ -10,11 +10,13 @@
     <style>
         /* Tambahkan CSS sesuai kebutuhan Anda untuk mengatur tampilan dalam orientasi landscape */
         @page {
-            size: landscape;
+            size: A3 landscape;
+            /* Mengatur ukuran A3 dalam orientasi landscape */
         }
 
+
         body {
-            font-size: 10px;
+            font-size: 12px;
             /* Atur ukuran font */
         }
 
@@ -75,43 +77,47 @@
                     <th>FLO Out</th>
                 </tr>
 
-                <tr>
-                    @foreach($input1 as $key => $data1)
-                    <td>{{ $data1->created_at->format('H:00')}}</td>
-                    <td>{{$data1->inlet_steam}}</td>
-                    <td>{{$data1->exm_steam}}</td>
-                    <td>{{$data1->turbin_thrust_bearing}}</td>
-                    <td>{{$data1->tb_gov_side}}</td>
-                    <td>{{$data1->tb_coup_side}}</td>
-                    <td>{{$data1->pb_tbn_side}}</td>
-                    <td>{{$data1->pb_gen_side}}</td>
-                    <td>{{$data1->wb_tbn_side}}</td>
-                    <td>{{$data1->wb_gen_side}}</td>
-                    <td>{{$data1->oc_lub_oil_outlet}}</td>
-                    @endforeach
-                    @foreach($input2 as $key => $data2)
-                    <td>{{$data2->turbin_speed}}</td>
-                    <td>{{$data2->rotor_vib_monitor}}</td>
-                    <td>{{$data2->axial_displacement_monitor}}</td>
-                    <td>{{$data2->main_steam}}</td>
-                    <td>{{$data2->stage_steam}}</td>
-                    <td>{{$data2->exhaust}}</td>
-                    <td>{{$data2->lub_oil}}</td>
-                    <td>{{$data2->control_oil}}</td>
-                    @endforeach
-                    @foreach($input3 as $key => $data3)
-                    <td>{{$data3->temp_water_in}}</td>
-                    <td>{{$data3->temp_water_out}}</td>
-                    <td>{{$data3->temp_oil_in}}</td>
-                    <td>{{$data3->temp_oil_out}}</td>
-                    <td>{{$data3->vacum}}</td>
-                    <td>{{$data3->injector}}</td>
-                    <td>{{$data3->speed_drop}}</td>
-                    <td>{{$data3->load_limit}}</td>
-                    <td>{{$data3->flo_in}}</td>
-                    <td>{{$data3->flo_out}}</td>
-                    @endforeach
-                </tr>
+                @php
+                $totalData = max(count($input1), count($input2), count($input3));
+                @endphp
+                @for($i = 0; $i < $totalData; $i++) <tr>
+                    @if(isset($input1[$i]))
+                    <td>{{$input1[$i]->created_at->modify('+1 hour')->format('H:00')}}</td>
+                    <td>{{$input1[$i]->inlet_steam}}</td>
+                    <td>{{$input1[$i]->exm_steam}}</td>
+                    <td>{{$input1[$i]->turbin_thrust_bearing}}</td>
+                    <td>{{$input1[$i]->tb_gov_side}}</td>
+                    <td>{{$input1[$i]->tb_coup_side}}</td>
+                    <td>{{$input1[$i]->pb_tbn_side}}</td>
+                    <td>{{$input1[$i]->pb_gen_side}}</td>
+                    <td>{{$input1[$i]->wb_tbn_side}}</td>
+                    <td>{{$input1[$i]->wb_gen_side}}</td>
+                    <td>{{$input1[$i]->oc_lub_oil_outlet}}</td>
+                    @endif
+                    @if(isset($input2[$i]))
+                    <td>{{$input2[$i]->turbin_speed}}</td>
+                    <td>{{$input2[$i]->rotor_vib_monitor}}</td>
+                    <td>{{$input2[$i]->axial_displacement_monitor}}</td>
+                    <td>{{$input2[$i]->main_steam}}</td>
+                    <td>{{$input2[$i]->stage_steam}}</td>
+                    <td>{{$input2[$i]->exhaust}}</td>
+                    <td>{{$input2[$i]->lub_oil}}</td>
+                    <td>{{$input2[$i]->control_oil}}</td>
+                    @endif
+                    @if(isset($input3[$i]))
+                    <td>{{$input3[$i]->temp_water_in}}</td>
+                    <td>{{$input3[$i]->temp_water_out}}</td>
+                    <td>{{$input3[$i]->temp_oil_in}}</td>
+                    <td>{{$input3[$i]->temp_oil_out}}</td>
+                    <td>{{$input3[$i]->vacum}}</td>
+                    <td>{{$input3[$i]->injector}}</td>
+                    <td>{{$input3[$i]->speed_drop}}</td>
+                    <td>{{$input3[$i]->load_limit}}</td>
+                    <td>{{$input3[$i]->flo_in}}</td>
+                    <td>{{$input3[$i]->flo_out}}</td>
+                    @endif
+                    </tr>
+                    @endfor
 
             </table>
         </div>

@@ -4,7 +4,7 @@
 <!-- Main Content -->
 <section class="section">
     <div class="section-header">
-        <h1>Input1 List</h1>
+        <h1>All Report List</h1>
         <div class="section-header-breadcrumb">
             <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
             <div class="breadcrumb-item"><a href="#">Components</a></div>
@@ -92,7 +92,7 @@
                                     @endphp
                                     @for($i = 0; $i < $totalData; $i++) <tr>
                                         @if(isset($input1[$i]))
-                                        <td>{{$input1[$i]->created_at->format('H:00')}}</td>
+                                        <td>{{$input1[$i]->created_at->modify('+1 hour')->format('H:00')}}</td>
                                         <td>{{$input1[$i]->inlet_steam}}</td>
                                         <td>{{$input1[$i]->exm_steam}}</td>
                                         <td>{{$input1[$i]->turbin_thrust_bearing}}</td>
