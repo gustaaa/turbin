@@ -10,8 +10,11 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\WithTitle;
+use Maatwebsite\Excel\Events\AfterSheet;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
-class ReportExport implements FromCollection, WithHeadings, ShouldAutoSize
+class ReportExport implements FromCollection, WithHeadings, ShouldAutoSize, WithTitle
 {
     protected $selectedDate;
 
@@ -19,48 +22,66 @@ class ReportExport implements FromCollection, WithHeadings, ShouldAutoSize
     {
         $this->selectedDate = $selectedDate;
     }
+    public function title(): string
+    {
+        return "LOGSHEET TURBIN A / B";
+    }
     public function collection()
     {
-        $input1Data = Input1::Select(
-            'created_at',
-            'inlet_steam',
-            'exm_steam',
-            'turbin_thrust_bearing',
-            'tb_gov_side',
-            'tb_coup_side',
-            'pb_tbn_side',
-            'pb_gen_side',
-            'wb_tbn_side',
-            'wb_gen_side',
-            'oc_lub_oil_outlet'
-        )->whereDate('created_at', $this->selectedDate)->get();
+        // Load data for hours 7 to 23
+        $input1 = Input1::whereDate('created_at', $this->selectedDate)
+            ->whereTime('created_at', '>=', '06:00:00')
+            ->whereTime('created_at', '<=', '23:59:59')
+            ->get();
 
-        $input2Data = Input2::Select(
-            'turbin_speed',
-            'rotor_vib_monitor',
-            'axial_displacement_monitor',
-            'main_steam',
-            'stage_steam',
-            'exhaust',
-            'lub_oil',
-            'control_oil'
-        )->whereDate('created_at', $this->selectedDate)->get();
+        // Load data for hours 0 to 6, but consider it as a previous day's data
+        // $previousDate = Carbon::parse($selectedDate)->subDay();
+        // Load data for hours 0 to 6, but consider it as a next day's data
+        $nextDate = Carbon::parse($this->selectedDate)->addDay();
+        $input1Midnight = Input1::whereDate('created_at', $nextDate)
+            ->whereTime('created_at', '>=', '00:00:00')
+            ->whereTime('created_at', '<=', '05:59:59')
+            ->get();
 
-        $input3Data = Input3::Select(
-            'temp_water_in',
-            'temp_water_out',
-            'temp_oil_in',
-            'temp_oil_out',
-            'vacum',
-            'injector',
-            'speed_drop',
-            'load_limit',
-            'flo_in',
-            'flo_out'
-        )->whereDate('created_at', $this->selectedDate)->get();
+        // Combine the data for hours 7 to 23 and hours 0 to 6
+        $input1 = $input1->concat($input1Midnight);
+
+        $input2Data = Input2::whereDate('created_at', $this->selectedDate)
+            ->whereTime('created_at', '>=', '06:00:00')
+            ->whereTime('created_at', '<=', '23:59:59')
+            ->get();
+
+        // Load data for hours 0 to 6, but consider it as a previous day's data
+        // $previousDate = Carbon::parse($selectedDate)->subDay();
+        // Load data for hours 0 to 6, but consider it as a next day's data
+        $nextDate = Carbon::parse($this->selectedDate)->addDay();
+        $input2Midnight = Input2::whereDate('created_at', $nextDate)
+            ->whereTime('created_at', '>=', '00:00:00')
+            ->whereTime('created_at', '<=', '05:59:59')
+            ->get();
+
+        // Combine the data for hours 7 to 23 and hours 0 to 6
+        $input2Data = $input2Data->concat($input2Midnight);
+
+        $input3 = Input3::whereDate('created_at', $this->selectedDate)
+            ->whereTime('created_at', '>=', '06:00:00')
+            ->whereTime('created_at', '<=', '23:59:59')
+            ->get();
+
+        // Load data for hours 0 to 6, but consider it as a previous day's data
+        // $previousDate = Carbon::parse($selectedDate)->subDay();
+        // Load data for hours 0 to 6, but consider it as a next day's data
+        $nextDate = Carbon::parse($this->selectedDate)->addDay();
+        $input3Midnight = Input3::whereDate('created_at', $nextDate)
+            ->whereTime('created_at', '>=', '00:00:00')
+            ->whereTime('created_at', '<=', '05:59:59')
+            ->get();
+
+        // Combine the data for hours 7 to 23 and hours 0 to 6
+        $input3Data = $input3->concat($input3Midnight);
         // Combine the data from all three inputs
         $combinedData = collect([]);
-        foreach ($input1Data as $key => $input1Row) {
+        foreach ($input1 as $key => $input1Row) {
 
             $combinedData->push(
                 [
@@ -107,35 +128,54 @@ class ReportExport implements FromCollection, WithHeadings, ShouldAutoSize
     {
         // Add the headings for all three inputs
         return [
-            'created_at', // From Input1
-            'inlet_steam',
-            'exm_steam',
-            'turbin_thrust_bearing',
-            'tb_gov_side',
-            'tb_coup_side',
-            'pb_tbn_side',
-            'pb_gen_side',
-            'wb_tbn_side',
-            'wb_gen_side',
-            'oc_lub_oil_outlet',
-            'turbin_speed', // From Input2
-            'rotor_vib_monitor',
-            'axial_displacement_monitor',
-            'main_steam',
-            'stage_steam',
-            'exhaust',
-            'lub_oil',
-            'control_oil',
-            'temp_water_in', // From Input3
-            'temp_water_out',
-            'temp_oil_in',
-            'temp_oil_out',
-            'vacum',
-            'injector',
-            'speed_drop',
-            'load_limit',
-            'flo_in',
-            'flo_out',
+            ['LOGSHEET TURBIN A/B'],
+            ['DEPARTEMEN ELEKTRIK 2023'],
+            ['PG GLENMORE'],
+            [
+                'Batas', // From Input1
+                'Inlet Steam',
+                'Exm Steam',
+                'Turbin Thrust Bearing',
+                'Turbin Bearing Gov Side',
+                'Turbin Bearing Coup Side',
+                'Pinion Bearing TBN Side',
+                'Pinion Bearing Gen Side',
+                'Wheel Bearing TBN Side',
+                'Wheel Bearing Gen Side',
+                'Oil Control Lub Oil Outlet',
+                'Turbin Speed', // From Input2
+                'Rotor Vibrator Monitor',
+                'Axial Displacement Monitor',
+                'Main Steam',
+                'Stage Steam',
+                'Exhaust',
+                'Lub Oil',
+                'Control Oil',
+                'Temperature Water In', // From Input3
+                'Temperature Water Out',
+                'Temperature Oil In',
+                'Temperature Oil Out',
+                'Vacum',
+                'Injector',
+                'Speed Drop',
+                'Load Limit',
+                'FLO In',
+                'FLO Out',
+            ]
+        ];
+    }
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function (AfterSheet $event) {
+                $event->sheet->getDelegate()->mergeCells('A1:K1');
+                $event->sheet->getDelegate()->mergeCells('A2:K2');
+                $event->sheet->getDelegate()->mergeCells('A3:K3');
+
+                // Tambahkan pemformatan penataan sel secara eksplisit
+                $event->sheet->getDelegate()->getStyle('A1:K3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+                $event->sheet->getDelegate()->getStyle('A1:K3')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+            },
         ];
     }
 }
