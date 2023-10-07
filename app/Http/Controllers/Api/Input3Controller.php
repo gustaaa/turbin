@@ -15,19 +15,20 @@ class Input3Controller extends Controller
     {
         $user = auth()->user();
 
-        // Mendapatkan waktu saat ini dalam format Jam
-        $currentHour = now()->hour;
+        // Mendapatkan tanggal dan jam saat ini dalam format "Y-m-d H:00:00"
+        $currentDateTime = now()->format('Y-m-d H:00:00');
 
-        // Menambahkan filter berdasarkan Jam created_at
+        // Menambahkan filter berdasarkan tanggal dan jam created_at
         $input1 = Input3::with('user')
             ->where('user_id', $user->id)
-            ->whereRaw('HOUR(created_at) = ?', [$currentHour]) // Menambahkan filter Jam
-            ->orderBy('created_at', 'desc') // Mengurutkan berdasarkan created_at
-            ->limit(1) // Hanya mengambil 1 hasil terbaru
+            ->whereRaw("DATE_FORMAT(created_at, '%Y-%m-%d %H:00:00') = ?", [$currentDateTime])
+            ->orderBy('created_at', 'desc')
+            ->limit(1)
             ->get();
 
         return $this->apiSuccess($input1);
     }
+
 
     /**
      * Store a newly created resource in storage.
