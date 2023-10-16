@@ -10,15 +10,32 @@
     <style>
         /* Tambahkan CSS sesuai kebutuhan Anda untuk mengatur tampilan dalam orientasi landscape */
         @page {
-            size: landscape;
+            size: A3 landscape;
+            /* Mengatur ukuran A3 dalam orientasi landscape */
         }
+
 
         body {
-            /* Contoh CSS tambahan untuk tampilan dalam orientasi landscape */
-
+            font-size: 12px;
+            /* Atur ukuran font */
         }
 
-        /* Tambahkan properti CSS tambahan sesuai kebutuhan */
+        .table th,
+        .table td {
+            padding: 6px;
+            /* Atur padding sel dalam tabel */
+            font-size: 8px;
+            /* Atur ukuran font sel dalam tabel */
+        }
+
+        .center-text {
+            text-align: center;
+        }
+
+        .custom-heading {
+            font-size: 10px;
+            text-align: left;
+        }
     </style>
 </head>
 
@@ -26,12 +43,12 @@
     <div class="row">
         <div class="col-md-12 margin-tb">
             <div class="pull-left mt-2">
-                <h5 align="center">LOGSHEET TURBIN A/B</h5>
-                <h5 align="center">DEPARTEMEN ELEKTRIK 2023</h5>
-                <h5 align="center">PG GLENMORE</h5>
+                <h5 class="center-text">LOGSHEET TURBIN A/B</h5>
+                <h5 class="center-text">DEPARTEMEN ELEKTRIK 2023</h5>
+                <h5 class="center-text">PG GLENMORE</h5>
             </div>
             <div class="pull-right">
-                <h3 align="left" style="font-size: 10px;">Tanggal: {{ $selectedDate }}</h3>
+                <h3 class="custom-heading">Tanggal: {{ $selectedDate }}</h3>
             </div>
             <br>
             <table class="table table-bordered">
@@ -48,21 +65,118 @@
                     <th>Control Oil</th>
 
                 </tr>
-                @foreach($input2 as $key => $data)
+                @php
+                $groupSize = 8;
+                $groupData = [];
+                $groupCount = 0;
+
+                $totalTurbinSpeed = 0;
+                $totalRotorVibMonitor = 0;
+                $totalAxialDisplacementMonitor = 0;
+                $totalMainSteam = 0;
+                $totalStageSteam = 0;
+                $totalExhaust = 0;
+                $totalLubOil = 0;
+                $totalControlOil = 0;
+                @endphp
+
+                @foreach ($report2 as $key => $data)
+                @php
+                $groupData[] = $data;
+                if (count($groupData) == $groupSize || $key == (count($report2) - 1)) {
+                $groupCount++;
+                $averageTurbinSpeed = 0;
+                $averageRotorVibMonitor = 0;
+                $averageAxialDisplacementMonitor = 0;
+                $averageMainSteam = 0;
+                $averageStageSteam = 0;
+                $averageExhaust = 0;
+                $averageLubOil = 0;
+                $averageControlOil = 0;
+                @endphp
+
+                @foreach ($groupData as $groupDataItem)
+                @php
+                $averageTurbinSpeed += $groupDataItem->turbin_speed;
+                $averageRotorVibMonitor += $groupDataItem->rotor_vib_monitor;
+                $averageAxialDisplacementMonitor += $groupDataItem->axial_displacement_monitor;
+                $averageMainSteam += $groupDataItem->main_steam;
+                $averageStageSteam += $groupDataItem->stage_steam;
+                $averageExhaust += $groupDataItem->exhaust;
+                $averageLubOil += $groupDataItem->lub_oil;
+                $averageControlOil += $groupDataItem->control_oil;
+
+                // Tambahkan ke total keseluruhan
+                $totalTurbinSpeed += $groupDataItem->turbin_speed;
+                $totalRotorVibMonitor += $groupDataItem->rotor_vib_monitor;
+                $totalAxialDisplacementMonitor += $groupDataItem->axial_displacement_monitor;
+                $totalMainSteam += $groupDataItem->main_steam;
+                $totalStageSteam += $groupDataItem->stage_steam;
+                $totalExhaust += $groupDataItem->exhaust;
+                $totalLubOil += $groupDataItem->lub_oil;
+                $totalControlOil += $groupDataItem->control_oil;
+                @endphp
+                @endforeach
+
+                @if (count($groupData) > 0)
+                @php
+                $averageTurbinSpeed /= count($groupData);
+                $averageRotorVibMonitor /= count($groupData);
+                $averageAxialDisplacementMonitor /= count($groupData);
+                $averageMainSteam /= count($groupData);
+                $averageStageSteam /= count($groupData);
+                $averageExhaust /= count($groupData);
+                $averageLubOil /= count($groupData);
+                $averageControlOil /= count($groupData);
+                @endphp
+                @endif
+
+                @foreach ($groupData as $groupDataItem)
                 <tr>
-
-                    <td>{{$data->created_at->modify('+1 hour')->format('H:00')}}</td>
-                    <td>{{$data->turbin_speed}}</td>
-                    <td>{{$data->rotor_vib_monitor}}</td>
-                    <td>{{$data->axial_displacement_monitor}}</td>
-                    <td>{{$data->main_steam}}</td>
-                    <td>{{$data->stage_steam}}</td>
-                    <td>{{$data->exhaust}}</td>
-                    <td>{{$data->lub_oil}}</td>
-                    <td>{{$data->control_oil}}</td>
-
+                    <td>{{$groupDataItem->created_at->modify('+1 hour')->format('H:00')}}</td>
+                    <td>{{ $groupDataItem->turbin_speed }}</td>
+                    <td>{{ $groupDataItem->rotor_vib_monitor }}</td>
+                    <td>{{ $groupDataItem->axial_displacement_monitor }}</td>
+                    <td>{{ $groupDataItem->main_steam }}</td>
+                    <td>{{ $groupDataItem->stage_steam }}</td>
+                    <td>{{ $groupDataItem->exhaust }}</td>
+                    <td>{{ $groupDataItem->lub_oil }}</td>
+                    <td>{{ $groupDataItem->control_oil }}</td>
                 </tr>
                 @endforeach
+
+                <!-- Tambahkan baris rata-rata setelah setiap kelompok -->
+                <tr>
+                    <td colspan="1"><strong>Rata-rata</strong></td>
+                    <td>{{ number_format($averageTurbinSpeed, 2) }}</td>
+                    <td>{{ number_format($averageRotorVibMonitor, 2) }}</td>
+                    <td>{{ number_format($averageAxialDisplacementMonitor, 2) }}</td>
+                    <td>{{ number_format($averageMainSteam, 2) }}</td>
+                    <td>{{ number_format($averageStageSteam, 2) }}</td>
+                    <td>{{ number_format($averageExhaust, 2) }}</td>
+                    <td>{{ number_format($averageLubOil, 2) }}</td>
+                    <td>{{ number_format($averageControlOil, 2) }}</td>
+                </tr>
+
+                @php
+                // Bersihkan grup data setelah menghitung rata-rata
+                $groupData = [];
+                }
+                @endphp
+                @endforeach
+
+                <!-- Baris rata-rata keseluruhan -->
+                <tr>
+                    <td colspan="1"><strong>Rata-rata Keseluruhan</strong></td>
+                    <td>{{ count($report2) > 0 ? number_format($totalTurbinSpeed / count($report2), 2) : 0 }}</td>
+                    <td>{{ count($report2) > 0 ? number_format($totalRotorVibMonitor / count($report2), 2) : 0 }}</td>
+                    <td>{{ count($report2) > 0 ? number_format($totalAxialDisplacementMonitor / count($report2), 2) : 0 }}</td>
+                    <td>{{ count($report2) > 0 ? number_format($totalMainSteam / count($report2), 2) : 0 }}</td>
+                    <td>{{ count($report2) > 0 ? number_format($totalStageSteam / count($report2), 2) : 0 }}</td>
+                    <td>{{ count($report2) > 0 ? number_format($totalExhaust / count($report2), 2) : 0 }}</td>
+                    <td>{{ count($report2) > 0 ? number_format($totalLubOil / count($report2), 2) : 0 }}</td>
+                    <td>{{ count($report2) > 0 ? number_format($totalControlOil / count($report2), 2) : 0 }}</td>
+                </tr>
             </table>
         </div>
     </div>

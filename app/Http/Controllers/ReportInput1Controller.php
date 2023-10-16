@@ -49,7 +49,7 @@ class ReportInput1Controller extends Controller
         $nextDate = Carbon::parse($selectedDate)->addDay();
         $input1Midnight = Input1::whereDate('created_at', $nextDate)
             ->whereTime('created_at', '>=', '00:00:00')
-            ->whereTime('created_at', '<=', '05:00:00')
+            ->whereTime('created_at', '<=', '05:59:59')
             ->get();
 
         // Gabungkan data untuk jam 7 hingga 23 dan jam 0 hingga 6
@@ -111,7 +111,7 @@ class ReportInput1Controller extends Controller
         $nextDate = Carbon::parse($selectedDate)->addDay();
         $input1Midnight = Input1::whereDate('created_at', $nextDate)
             ->whereTime('created_at', '>=', '00:00:00')
-            ->whereTime('created_at', '<=', '05:00:00')
+            ->whereTime('created_at', '<=', '05:59:59')
             ->get();
 
         // Gabungkan data untuk jam 7 hingga 23 dan jam 0 hingga 6

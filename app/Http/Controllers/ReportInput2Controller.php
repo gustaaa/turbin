@@ -6,6 +6,7 @@ use App\Models\Input2;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Carbon;
 use App\Exports\Input2Export;
 use PDF;
 
@@ -80,9 +81,22 @@ class ReportInput2Controller extends Controller
     {
         $selectedDate = $request->input('selected_date');
 
-        $report2 = Input2::when($selectedDate, function ($query) use ($selectedDate) {
-            return $query->whereDate('created_at', $selectedDate);
-        })->get();
+        $input2 = Input2::whereDate('created_at', $selectedDate)
+            ->whereTime('created_at', '>=', '06:00:00')
+            ->whereTime('created_at', '<=', '23:59:59')
+            ->get();
+
+        // Load data for hours 0 to 6, but consider it as a previous day's data
+        // $previousDate = Carbon::parse($selectedDate)->subDay();
+        // Load data for hours 0 to 6, but consider it as a next day's data
+        $nextDate = Carbon::parse($selectedDate)->addDay();
+        $input2Midnight = Input2::whereDate('created_at', $nextDate)
+            ->whereTime('created_at', '>=', '00:00:00')
+            ->whereTime('created_at', '<=', '05:59:59')
+            ->get();
+
+        // Combine the data for hours 7 to 23 and hours 0 to 6
+        $report2 = $input2->concat($input2Midnight);
 
         $pdf = PDF::loadview('report.report2.laporan', compact('report2', 'selectedDate'));
         return $pdf->stream();
