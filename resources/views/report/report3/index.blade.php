@@ -73,23 +73,94 @@
                                         <th data-id="thFLOOut">FLO Out</th>
                                         <th class="text-center">Action</th>
                                     </tr>
-                                    @foreach($report3 as $key => $data)
+                                    @php
+                                    $groupSize = 8;
+                                    $groupData = [];
+                                    $groupCount = 0;
+
+                                    $totalTempWaterIn = 0;
+                                    $totalTempWaterOut = 0;
+                                    $totalTempOilIn = 0;
+                                    $totalTempOilOut = 0;
+                                    $totalVacum = 0;
+                                    $totalInjector = 0;
+                                    $totalSpeedDrop = 0;
+                                    $totalLoadLimit = 0;
+                                    $totalFloIn = 0;
+                                    $totalFloOut = 0;
+
+                                    foreach ($report3 as $key => $data) {
+                                    $groupData[] = $data;
+                                    if (count($groupData) == $groupSize || $key == (count($report3) - 1)) {
+                                    $groupCount++;
+                                    $averageTempWaterIn = 0;
+                                    $averageTempWaterOut = 0;
+                                    $averageTempOilIn = 0;
+                                    $averageTempOilOut = 0;
+                                    $averageVacum = 0;
+                                    $averageInjector = 0;
+                                    $averageSpeedDrop = 0;
+                                    $averageLoadLimit = 0;
+                                    $averageFloIn = 0;
+                                    $averageFloOut = 0;
+
+                                    foreach ($groupData as $groupDataItem) {
+                                    $averageTempWaterIn += $groupDataItem->temp_water_in;
+                                    $averageTempWaterOut += $groupDataItem->temp_water_out;
+                                    $averageTempOilIn += $groupDataItem->temp_oil_in;
+                                    $averageTempOilOut += $groupDataItem->temp_oil_out;
+                                    $averageVacum += $groupDataItem->vacum;
+                                    $averageInjector += $groupDataItem->injector;
+                                    $averageSpeedDrop += $groupDataItem->speed_drop;
+                                    $averageLoadLimit += $groupDataItem->load_limit;
+                                    $averageFloIn += $groupDataItem->flo_in;
+                                    $averageFloOut += $groupDataItem->flo_out;
+
+                                    // Tambahkan ke total keseluruhan
+                                    $totalTempWaterIn += $groupDataItem->temp_water_in;
+                                    $totalTempWaterOut += $groupDataItem->temp_water_out;
+                                    $totalTempOilIn += $groupDataItem->temp_oil_in;
+                                    $totalTempOilOut += $groupDataItem->temp_oil_out;
+                                    $totalVacum += $groupDataItem->vacum;
+                                    $totalInjector += $groupDataItem->injector;
+                                    $totalSpeedDrop += $groupDataItem->speed_drop;
+                                    $totalLoadLimit += $groupDataItem->load_limit;
+                                    $totalFloIn += $groupDataItem->flo_in;
+                                    $totalFloOut += $groupDataItem->flo_out;
+                                    }
+
+                                    if (count($groupData) > 0) {
+                                    $averageTempWaterIn /= count($groupData);
+                                    $averageTempWaterOut /= count($groupData);
+                                    $averageTempOilIn /= count($groupData);
+                                    $averageTempOilOut /= count($groupData);
+                                    $averageVacum /= count($groupData);
+                                    $averageInjector /= count($groupData);
+                                    $averageSpeedDrop /= count($groupData);
+                                    $averageLoadLimit /= count($groupData);
+                                    $averageFloIn /= count($groupData);
+                                    $averageFloOut /= count($groupData);
+                                    }
+                                    @endphp
+
+                                    @foreach ($groupData as $groupDataItem)
                                     <tr>
-                                        <td>{{ ($loop->index + 1) }}</td>
-                                        <td>{{$data->created_at->modify('+1 hour')->format('H:00')}}</td>
-                                        <td>{{$data->temp_water_in}}</td>
-                                        <td>{{$data->temp_water_out}}</td>
-                                        <td>{{$data->temp_oil_in}}</td>
-                                        <td>{{$data->temp_oil_out}}</td>
-                                        <td>{{$data->vacum}}</td>
-                                        <td>{{$data->injector}}</td>
-                                        <td>{{$data->speed_drop}}</td>
-                                        <td>{{$data->load_limit}}</td>
-                                        <td>{{$data->flo_in}}</td>
-                                        <td>{{$data->flo_out}}</td>
+                                        <td>{{ ($loop->index + 1) + (($groupCount - 1) * $groupSize) }}</td>
+                                        <td>{{$groupDataItem->created_at->modify('+1 hour')->format('H:00')}}</td>
+                                        <td>{{ $groupDataItem->temp_water_in }}</td>
+                                        <td>{{ $groupDataItem->temp_water_out }}</td>
+                                        <td>{{ $groupDataItem->temp_oil_in }}</td>
+                                        <td>{{ $groupDataItem->temp_oil_out }}</td>
+                                        <td>{{ $groupDataItem->vacum }}</td>
+                                        <td>{{ $groupDataItem->injector }}</td>
+                                        <td>{{ $groupDataItem->speed_drop }}</td>
+                                        <td>{{ $groupDataItem->load_limit }}</td>
+                                        <td>{{ $groupDataItem->flo_in }}</td>
+                                        <td>{{ $groupDataItem->flo_out }}</td>
+
                                         <td class="text-center">
                                             <div class="d-flex justify-content-center">
-                                                <a href="{{ route('report3.edit', $data->id) }}" data-id="editInput131" class="btn btn-sm btn-info btn-icon mr-2">
+                                                <a href="{{ route('report3.edit', $groupDataItem->id) }}" data-id="editInput131" class="btn btn-sm btn-info btn-icon mr-2">
                                                     <i class="fas fa-edit"></i>
                                                     Edit
                                                 </a>
@@ -97,9 +168,45 @@
                                         </td>
                                     </tr>
                                     @endforeach
+
+                                    <!-- Tambahkan baris rata-rata setelah setiap kelompok -->
+                                    <tr>
+                                        <td colspan="2"><strong>Rata-rata</strong></td>
+                                        <td>{{ number_format($averageTempWaterIn, 2) }}</td>
+                                        <td>{{ number_format($averageTempWaterOut, 2) }}</td>
+                                        <td>{{ number_format($averageTempOilIn, 2) }}</td>
+                                        <td>{{ number_format($averageTempOilOut, 2) }}</td>
+                                        <td>{{ number_format($averageVacum, 2) }}</td>
+                                        <td>{{ number_format($averageInjector, 2) }}</td>
+                                        <td>{{ number_format($averageSpeedDrop, 2) }}</td>
+                                        <td>{{ number_format($averageLoadLimit, 2) }}</td>
+                                        <td>{{ number_format($averageFloIn, 2) }}</td>
+                                        <td>{{ number_format($averageFloOut, 2) }}</td>
+                                    </tr>
+
+                                    @php
+                                    // Bersihkan grup data setelah menghitung rata-rata
+                                    $groupData = [];
+                                    }
+                                    }
+                                    @endphp
+
+                                    <!-- Baris rata-rata keseluruhan -->
+                                    <tr>
+                                        <td colspan="2"><strong>Rata-rata Keseluruhan</strong></td>
+                                        <td>{{ count($report3) > 0 ? number_format($totalTempWaterIn / count($report3), 2) : 0 }}</td>
+                                        <td>{{ count($report3) > 0 ? number_format($totalTempWaterOut / count($report3), 2) : 0 }}</td>
+                                        <td>{{ count($report3) > 0 ? number_format($totalTempOilIn / count($report3), 2) : 0 }}</td>
+                                        <td>{{ count($report3) > 0 ? number_format($totalTempOilOut / count($report3), 2) : 0 }}</td>
+                                        <td>{{ count($report3) > 0 ? number_format($totalVacum / count($report3), 2) : 0 }}</td>
+                                        <td>{{ count($report3) > 0 ? number_format($totalInjector / count($report3), 2) : 0 }}</td>
+                                        <td>{{ count($report3) > 0 ? number_format($totalSpeedDrop / count($report3), 2) : 0 }}</td>
+                                        <td>{{ count($report3) > 0 ? number_format($totalLoadLimit / count($report3), 2) : 0 }}</td>
+                                        <td>{{ count($report3) > 0 ? number_format($totalFloIn / count($report3), 2) : 0 }}</td>
+                                        <td>{{ count($report3) > 0 ? number_format($totalFloOut / count($report3), 2) : 0 }}</td>
+                                    </tr>
                                 </tbody>
                             </table>
-
                         </div>
                     </div>
                 </div>

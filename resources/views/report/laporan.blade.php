@@ -28,6 +28,15 @@
             /* Atur ukuran font sel dalam tabel */
         }
 
+        .center-text {
+            text-align: center;
+        }
+
+        .custom-heading {
+            font-size: 10px;
+            text-align: left;
+        }
+
         /* Tambahkan properti CSS tambahan sesuai kebutuhan */
     </style>
 </head>
@@ -36,12 +45,12 @@
     <div class="row">
         <div class="col-md-12 margin-tb">
             <div class="pull-left mt-2">
-                <h5 align="center">LOGSHEET TURBIN A/B</h5>
-                <h5 align="center">DEPARTEMEN ELEKTRIK 2023</h5>
-                <h5 align="center">PG GLENMORE</h5>
+                <h5 class="center-text">LOGSHEET TURBIN A/B</h5>
+                <h5 class="center-text">DEPARTEMEN ELEKTRIK 2023</h5>
+                <h5 class="center-text">PG GLENMORE</h5>
             </div>
             <div class="pull-right">
-                <h3 align="left" style="font-size: 10px;">Tanggal: {{ $selectedDate }}</h3>
+                <h3 class="custom-heading">Tanggal: {{ $selectedDate }}</h3>
             </div>
             <br>
             <table class="table table-bordered">
