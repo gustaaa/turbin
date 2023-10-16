@@ -9,12 +9,13 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\WithTitle;
-use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class ReportExport implements FromCollection, WithHeadings, ShouldAutoSize, WithTitle
+
+class ReportExport implements FromCollection, WithHeadings, ShouldAutoSize, WithTitle, WithStyles
 {
     protected $selectedDate;
 
@@ -85,7 +86,7 @@ class ReportExport implements FromCollection, WithHeadings, ShouldAutoSize, With
 
             $combinedData->push(
                 [
-                    'created_at' => $input1Row->created_at->format('H:i:s'),
+                    'created_at' => $input1Row->created_at->format('H:00'),
                     'inlet_steam' => $input1Row->inlet_steam,
                     'exm_steam' => $input1Row->exm_steam,
                     'turbin_thrust_bearing' => $input1Row->turbin_thrust_bearing,
@@ -120,7 +121,6 @@ class ReportExport implements FromCollection, WithHeadings, ShouldAutoSize, With
                 //     $input3Data[$key]->toArray()
             );
         }
-
         return $combinedData;
     }
 
@@ -164,18 +164,18 @@ class ReportExport implements FromCollection, WithHeadings, ShouldAutoSize, With
             ]
         ];
     }
-    public function registerEvents(): array
+    public function styles(Worksheet $sheet)
     {
-        return [
-            AfterSheet::class => function (AfterSheet $event) {
-                $event->sheet->getDelegate()->mergeCells('A1:K1');
-                $event->sheet->getDelegate()->mergeCells('A2:K2');
-                $event->sheet->getDelegate()->mergeCells('A3:K3');
+        $sheet->mergeCells('A1:AC1');
+        $sheet->mergeCells('A2:AC2');
+        $sheet->mergeCells('A3:AC3');
+        // Set horizontal alignment to center
+        $sheet->getStyle('A1:AC3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
-                // Tambahkan pemformatan penataan sel secara eksplisit
-                $event->sheet->getDelegate()->getStyle('A1:K3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-                $event->sheet->getDelegate()->getStyle('A1:K3')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
-            },
-        ];
+        // Set vertical alignment to center
+        $sheet->getStyle('A1:AC3')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+
+        // Make the text bold
+        $sheet->getStyle('A1:AC3')->getFont()->setBold(true);
     }
 }

@@ -8,10 +8,11 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithTitle;
-use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class Input3Export implements FromCollection, WithHeadings, ShouldAutoSize, WithTitle
+class Input3Export implements FromCollection, WithHeadings, ShouldAutoSize, WithTitle, WithStyles
 {
     protected $selectedDate;
 
@@ -47,7 +48,7 @@ class Input3Export implements FromCollection, WithHeadings, ShouldAutoSize, With
 
         return $input3Data->map(function ($item) {
             return [
-                'created_at' => $item->created_at->format('H:i:s'), // Format created_at to match database format
+                'created_at' => $item->created_at->format('H:00'), // Format created_at to match database format
                 'temp_water_in' => $item->temp_water_in,
                 'temp_water_out' => $item->temp_water_out,
                 'temp_oil_in' => $item->temp_oil_in,
@@ -83,18 +84,18 @@ class Input3Export implements FromCollection, WithHeadings, ShouldAutoSize, With
             ]
         ];
     }
-    public function registerEvents(): array
+    public function styles(Worksheet $sheet)
     {
-        return [
-            AfterSheet::class => function (AfterSheet $event) {
-                $event->sheet->getDelegate()->mergeCells('A1:K1');
-                $event->sheet->getDelegate()->mergeCells('A2:K2');
-                $event->sheet->getDelegate()->mergeCells('A3:K3');
+        $sheet->mergeCells('A1:K1');
+        $sheet->mergeCells('A2:K2');
+        $sheet->mergeCells('A3:K3');
+        // Set horizontal alignment to center
+        $sheet->getStyle('A1:K3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
-                // Tambahkan pemformatan penataan sel secara eksplisit
-                $event->sheet->getDelegate()->getStyle('A1:K3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-                $event->sheet->getDelegate()->getStyle('A1:K3')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
-            },
-        ];
+        // Set vertical alignment to center
+        $sheet->getStyle('A1:K3')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+
+        // Make the text bold
+        $sheet->getStyle('A1:K3')->getFont()->setBold(true);
     }
 }
