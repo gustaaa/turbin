@@ -49,4 +49,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Input1::class);
     }
+    public function input2()
+    {
+        return $this->hasMany(Input2::class);
+    }
+    public function input3()
+    {
+        return $this->hasMany(Input3::class);
+    }
 }
