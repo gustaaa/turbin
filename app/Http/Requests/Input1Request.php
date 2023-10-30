@@ -27,16 +27,16 @@ class Input1Request extends ApiRequest
     public function rules()
     {
         return [
-            'inlet_steam' => 'required|double',
-            'exm_steam' => 'required|double',
-            'turbin_thrust_bearing' => 'required|double',
-            'tb_gov_side' => 'required|double',
-            'tb_coup_side' => 'required|double',
-            'pb_tbn_side' => 'required|double',
-            'pb_gen_side' => 'required|double',
-            'wb_tbn_side' => 'required|double',
-            'wb_gen_side' => 'required|double',
-            'oc_lub_oil_outlet' => 'required|double',
+            'inlet_steam' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'exm_steam' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'turbin_thrust_bearing' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'tb_gov_side' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'tb_coup_side' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'pb_tbn_side' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'pb_gen_side' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'wb_tbn_side' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'wb_gen_side' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'oc_lub_oil_outlet' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
         ];
     }
 }

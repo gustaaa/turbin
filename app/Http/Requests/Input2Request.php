@@ -27,14 +27,14 @@ class Input2Request extends ApiRequest
     public function rules(): array
     {
         return [
-            'turbin_speed' => 'required|double',
-            'rotor_vib_monitor' => 'required|double',
-            'axial_displacement_monitor' => 'required|double',
-            'main_steam' => 'required|double',
-            'stage_steam' => 'required|double',
-            'exhaust' => 'required|double',
-            'lub_oil' => 'required|double',
-            'control_oil' => 'required|double',
+            'turbin_speed' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'rotor_vib_monitor' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'axial_displacement_monitor' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'main_steam' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'stage_steam' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'exhaust' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'lub_oil' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'control_oil' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
         ];
     }
 }

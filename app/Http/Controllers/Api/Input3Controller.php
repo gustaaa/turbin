@@ -14,21 +14,12 @@ class Input3Controller extends Controller
     public function index()
     {
         $user = auth()->user();
-
-        // Mendapatkan tanggal dan jam saat ini dalam format "Y-m-d H:00:00"
-        $currentDateTime = now()->format('Y-m-d H:00:00');
-
-        // Menambahkan filter berdasarkan tanggal dan jam created_at
-        $input1 = Input3::with('user')
+        $input3 = Input3::with('user')
             ->where('user_id', $user->id)
-            ->whereRaw("DATE_FORMAT(created_at, '%Y-%m-%d %H:00:00') = ?", [$currentDateTime])
-            ->orderBy('created_at', 'desc')
-            ->limit(1)
             ->get();
 
-        return $this->apiSuccess($input1);
+        return $this->apiSuccess($input3);
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -56,6 +47,18 @@ class Input3Controller extends Controller
      */
     public function show(Input3 $input3)
     {
+        $user = auth()->user();
+
+        // Mendapatkan tanggal dan jam saat ini dalam format "Y-m-d H:00:00"
+        $currentDateTime = now()->format('Y-m-d H:00:00');
+
+        // Menambahkan filter berdasarkan tanggal dan jam created_at
+        $input3 = Input3::with('user')
+            ->where('user_id', $user->id)
+            ->whereRaw("DATE_FORMAT(created_at, '%Y-%m-%d %H:00:00') = ?", [$currentDateTime])
+            ->orderBy('created_at', 'desc')
+            ->limit(1)
+            ->get();
         return $this->apiSuccess($input3->load('user'));
     }
 
@@ -69,19 +72,37 @@ class Input3Controller extends Controller
     public function update(Input3Request $request, Input3 $input3)
     {
         $request->validated();
-        $input3->temp_water_in = $request->temp_water_in;
-        $input3->temp_water_out = $request->temp_water_out;
-        $input3->temp_oil_in = $request->temp_oil_in;
-        $input3->temp_oil_out = $request->temp_oil_out;
-        $input3->vacum = $request->vacum;
-        $input3->injector = $request->injector;
-        $input3->speed_drop = $request->speed_drop;
-        $input3->load_limit = $request->load_limit;
-        $input3->flo_in = $request->flo_in;
-        $input3->flo_out = $request->flo_out;
+        $user = auth()->user();
 
-        $input3->save();
-        return $this->apiSuccess($input3->load('user'));
+        // Mendapatkan tanggal dan jam saat ini dalam format "Y-m-d H:00:00"
+        $currentDateTime = now()->format('Y-m-d H:00:00');
+
+        // Menambahkan filter berdasarkan tanggal dan jam created_at
+        $input3 = Input3::with('user')
+            ->where('user_id', $user->id)
+            ->whereRaw("DATE_FORMAT(created_at, '%Y-%m-%d %H:00:00') = ?", [$currentDateTime])
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        if ($input3) {
+            $input3->temp_water_in = $request->temp_water_in;
+            $input3->temp_water_out = $request->temp_water_out;
+            $input3->temp_oil_in = $request->temp_oil_in;
+            $input3->temp_oil_out = $request->temp_oil_out;
+            $input3->vacum = $request->vacum;
+            $input3->injector = $request->injector;
+            $input3->speed_drop = $request->speed_drop;
+            $input3->load_limit = $request->load_limit;
+            $input3->flo_in = $request->flo_in;
+            $input3->flo_out = $request->flo_out;
+            // Save the updated model
+            $input3->save();
+
+            return $this->apiSuccess($input3->load('user'));
+        } else {
+            // Handle the case where no matching record was found
+            return $this->apiError('Data not found.', Response::HTTP_UNAUTHORIZED);
+        }
     }
     /**
      * Remove the specified resource from storage.

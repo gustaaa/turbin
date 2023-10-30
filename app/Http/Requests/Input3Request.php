@@ -27,16 +27,16 @@ class Input3Request extends ApiRequest
     public function rules()
     {
         return [
-            'temp_water_in' => 'required|double',
-            'temp_water_out' => 'required|double',
-            'temp_oil_in' => 'required|double',
-            'temp_oil_out' => 'required|double',
-            'vacum' => 'required|double',
-            'injector' => 'required|double',
-            'speed_drop' => 'required|double',
-            'load_limit' => 'required|double',
-            'flo_in' => 'required|double',
-            'flo_out' => 'required|double',
+            'temp_water_in' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'temp_water_out' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'temp_oil_in' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'temp_oil_out' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'vacum' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'injector' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'speed_drop' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'load_limit' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'flo_in' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'flo_out' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
         ];
     }
 }
