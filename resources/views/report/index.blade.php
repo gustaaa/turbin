@@ -88,46 +88,134 @@
                                         <th data-id="thFLOOut">FLO Out</th>
                                     </tr>
                                     @php
+                                    // Menentukan jumlah maksimum baris di antara array input
                                     $totalData = max(count($input1), count($input2), count($input3));
-                                    @endphp
-                                    @for($i = 0; $i < $totalData; $i++) <tr>
-                                        @if(isset($input1[$i]))
-                                        <td>{{$input1[$i]->created_at->modify('+1 hour')->format('H:00')}}</td>
-                                        <td>{{$input1[$i]->inlet_steam}}</td>
-                                        <td>{{$input1[$i]->exm_steam}}</td>
-                                        <td>{{$input1[$i]->turbin_thrust_bearing}}</td>
-                                        <td>{{$input1[$i]->tb_gov_side}}</td>
-                                        <td>{{$input1[$i]->tb_coup_side}}</td>
-                                        <td>{{$input1[$i]->pb_tbn_side}}</td>
-                                        <td>{{$input1[$i]->pb_gen_side}}</td>
-                                        <td>{{$input1[$i]->wb_tbn_side}}</td>
-                                        <td>{{$input1[$i]->wb_gen_side}}</td>
-                                        <td>{{$input1[$i]->oc_lub_oil_outlet}}</td>
-                                        @endif
-                                        @if(isset($input2[$i]))
-                                        <td>{{$input2[$i]->turbin_speed}}</td>
-                                        <td>{{$input2[$i]->rotor_vib_monitor}}</td>
-                                        <td>{{$input2[$i]->axial_displacement_monitor}}</td>
-                                        <td>{{$input2[$i]->main_steam}}</td>
-                                        <td>{{$input2[$i]->stage_steam}}</td>
-                                        <td>{{$input2[$i]->exhaust}}</td>
-                                        <td>{{$input2[$i]->lub_oil}}</td>
-                                        <td>{{$input2[$i]->control_oil}}</td>
-                                        @endif
-                                        @if(isset($input3[$i]))
-                                        <td>{{$input3[$i]->temp_water_in}}</td>
-                                        <td>{{$input3[$i]->temp_water_out}}</td>
-                                        <td>{{$input3[$i]->temp_oil_in}}</td>
-                                        <td>{{$input3[$i]->temp_oil_out}}</td>
-                                        <td>{{$input3[$i]->vacum}}</td>
-                                        <td>{{$input3[$i]->injector}}</td>
-                                        <td>{{$input3[$i]->speed_drop}}</td>
-                                        <td>{{$input3[$i]->load_limit}}</td>
-                                        <td>{{$input3[$i]->flo_in}}</td>
-                                        <td>{{$input3[$i]->flo_out}}</td>
-                                        @endif
-                                        </tr>
-                                        @endfor
+
+                                    // Inisialisasi array untuk menyimpan nilai kolom dan hitungan
+                                    $columns = array(
+                                    'inlet_steam' => 0,
+                                    'exm_steam' => 0,
+                                    'turbin_thrust_bearing' => 0,
+                                    'tb_gov_side' => 0,
+                                    'tb_coup_side' => 0,
+                                    'pb_tbn_side' => 0,
+                                    'pb_gen_side' => 0,
+                                    'wb_tbn_side' => 0,
+                                    'wb_gen_side' => 0,
+                                    'oc_lub_oil_outlet' => 0,
+                                    'turbin_speed' => 0,
+                                    'rotor_vib_monitor' => 0,
+                                    'axial_displacement_monitor' => 0,
+                                    'main_steam' => 0,
+                                    'stage_steam' => 0,
+                                    'exhaust' => 0,
+                                    'lub_oil' => 0,
+                                    'control_oil' => 0,
+                                    'temp_water_in' => 0,
+                                    'temp_water_out' => 0,
+                                    'temp_oil_in' => 0,
+                                    'temp_oil_out' => 0,
+                                    'vacum' => 0,
+                                    'injector' => 0,
+                                    'speed_drop' => 0,
+                                    'load_limit' => 0,
+                                    'flo_in' => 0,
+                                    'flo_out' => 0
+                                    );
+
+                                    // Melalui data dan mengakumulasi nilai untuk setiap kolom
+                                    for ($i = 0; $i < $totalData; $i++) { if (isset($input1[$i])) { foreach ($columns as $key=> $value) {
+                                        $columns[$key] += $input1[$i]->$key;
+                                        }
+                                        }
+                                        if (isset($input2[$i])) {
+                                        foreach ($columns as $key => $value) {
+                                        $columns[$key] += $input2[$i]->$key;
+                                        }
+                                        }
+                                        if (isset($input3[$i])) {
+                                        foreach ($columns as $key => $value) {
+                                        $columns[$key] += $input3[$i]->$key;
+                                        }
+                                        }
+                                        }
+
+                                        // Menghitung rata-rata untuk setiap kolom
+                                        $columnCount = count($columns);
+                                        foreach ($columns as $key => $value) {
+                                        $columns[$key] = $value / $columnCount;
+                                        }
+                                        @endphp
+                                        @for($i = 0; $i < $totalData; $i++) <tr>
+                                            @if(isset($input1[$i]))
+                                            <td>{{$input1[$i]->created_at->modify('+1 hour')->format('H:00')}}</td>
+                                            <td>{{$input1[$i]->inlet_steam}}</td>
+                                            <td>{{$input1[$i]->exm_steam}}</td>
+                                            <td>{{$input1[$i]->turbin_thrust_bearing}}</td>
+                                            <td>{{$input1[$i]->tb_gov_side}}</td>
+                                            <td>{{$input1[$i]->tb_coup_side}}</td>
+                                            <td>{{$input1[$i]->pb_tbn_side}}</td>
+                                            <td>{{$input1[$i]->pb_gen_side}}</td>
+                                            <td>{{$input1[$i]->wb_tbn_side}}</td>
+                                            <td>{{$input1[$i]->wb_gen_side}}</td>
+                                            <td>{{$input1[$i]->oc_lub_oil_outlet}}</td>
+                                            @endif
+                                            @if(isset($input2[$i]))
+                                            <td>{{$input2[$i]->turbin_speed}}</td>
+                                            <td>{{$input2[$i]->rotor_vib_monitor}}</td>
+                                            <td>{{$input2[$i]->axial_displacement_monitor}}</td>
+                                            <td>{{$input2[$i]->main_steam}}</td>
+                                            <td>{{$input2[$i]->stage_steam}}</td>
+                                            <td>{{$input2[$i]->exhaust}}</td>
+                                            <td>{{$input2[$i]->lub_oil}}</td>
+                                            <td>{{$input2[$i]->control_oil}}</td>
+                                            @endif
+                                            @if(isset($input3[$i]))
+                                            <td>{{$input3[$i]->temp_water_in}}</td>
+                                            <td>{{$input3[$i]->temp_water_out}}</td>
+                                            <td>{{$input3[$i]->temp_oil_in}}</td>
+                                            <td>{{$input3[$i]->temp_oil_out}}</td>
+                                            <td>{{$input3[$i]->vacum}}</td>
+                                            <td>{{$input3[$i]->injector}}</td>
+                                            <td>{{$input3[$i]->speed_drop}}</td>
+                                            <td>{{$input3[$i]->load_limit}}</td>
+                                            <td>{{$input3[$i]->flo_in}}</td>
+                                            <td>{{$input3[$i]->flo_out}}</td>
+                                            @endif
+                                            </tr>
+                                            @endfor
+                                            <!-- Baris rata-rata -->
+                                            <tr>
+                                                <td><strong>Rata-rata Keseluruhan</strong></td>
+                                                <td>{{ count($input1) > 0 ? number_format($columns['inlet_steam'], 2) : 0 }}</td>
+                                                <td>{{ count($input1) > 0 ? number_format($columns['exm_steam'], 2) : 0 }}</td>
+                                                <td>{{ count($input1) > 0 ? number_format($columns['turbin_thrust_bearing'], 2) : 0 }}</td>
+                                                <td>{{ count($input1) > 0 ? number_format($columns['tb_gov_side'], 2) : 0 }}</td>
+                                                <td>{{ count($input1) > 0 ? number_format($columns['tb_coup_side'], 2) : 0 }}</td>
+                                                <td>{{ count($input1) > 0 ? number_format($columns['pb_tbn_side'], 2) : 0 }}</td>
+                                                <td>{{ count($input1) > 0 ? number_format($columns['pb_gen_side'], 2) : 0 }}</td>
+                                                <td>{{ count($input1) > 0 ? number_format($columns['wb_tbn_side'], 2) : 0 }}</td>
+                                                <td>{{ count($input1) > 0 ? number_format($columns['wb_gen_side'], 2) : 0 }}</td>
+                                                <td>{{ count($input1) > 0 ? number_format($columns['oc_lub_oil_outlet'], 2) : 0 }}</td>
+                                                <td>{{ count($input2) > 0 ? number_format($columns['turbin_speed'], 2) : 0 }}</td>
+                                                <td>{{ count($input2) > 0 ? number_format($columns['rotor_vib_monitor'], 2) : 0 }}</td>
+                                                <td>{{ count($input2) > 0 ? number_format($columns['axial_displacement_monitor'], 2) : 0 }}</td>
+                                                <td>{{ count($input2) > 0 ? number_format($columns['main_steam'], 2) : 0 }}</td>
+                                                <td>{{ count($input2) > 0 ? number_format($columns['stage_steam'], 2) : 0 }}</td>
+                                                <td>{{ count($input2) > 0 ? number_format($columns['exhaust'], 2) : 0 }}</td>
+                                                <td>{{ count($input2) > 0 ? number_format($columns['lub_oil'], 2) : 0 }}</td>
+                                                <td>{{ count($input2) > 0 ? number_format($columns['control_oil'], 2) : 0 }}</td>
+                                                <td>{{ count($input3) > 0 ? number_format($columns['temp_water_in'], 2) : 0 }}</td>
+                                                <td>{{ count($input3) > 0 ? number_format($columns['temp_water_out'], 2) : 0 }}</td>
+                                                <td>{{ count($input3) > 0 ? number_format($columns['temp_oil_in'], 2) : 0 }}</td>
+                                                <td>{{ count($input3) > 0 ? number_format($columns['temp_oil_out'], 2) : 0 }}</td>
+                                                <td>{{ count($input3) > 0 ? number_format($columns['vacum'], 2) : 0 }}</td>
+                                                <td>{{ count($input3) > 0 ? number_format($columns['injector'], 2) : 0 }}</td>
+                                                <td>{{ count($input3) > 0 ? number_format($columns['speed_drop'], 2) : 0 }}</td>
+                                                <td>{{ count($input3) > 0 ? number_format($columns['load_limit'], 2) : 0 }}</td>
+                                                <td>{{ count($input3) > 0 ? number_format($columns['flo_in'], 2) : 0 }}</td>
+                                                <td>{{ count($input3) > 0 ? number_format($columns['flo_out'], 2) : 0 }}</td>
+                                            </tr>
                                 </tbody>
                             </table>
                         </div>

@@ -21,6 +21,12 @@
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/components.css">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="/assets/highcharts/code/highcharts.js"></script>
+    <script src="/assets/highcharts/code/modules/data.js"></script>
+    <script src="/assets/highcharts/code/modules/drilldown.js"></script>
+    <script src="/assets/highcharts/code/modules/exporting.js"></script>
+    <script src="/assets/highcharts/code/modules/export-data.js"></script>
+    <script src="/assets/highcharts/code/modules/accessibility.js"></script>
 </head>
 
 <body class="sidebar-mini">

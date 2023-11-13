@@ -170,7 +170,6 @@
                                         <td>{{ number_format($averageExhaust, 2) }}</td>
                                         <td>{{ number_format($averageLubOil, 2) }}</td>
                                         <td>{{ number_format($averageControlOil, 2) }}</td>
-                                        <td></td> <!-- Kolom lainnya -->
                                     </tr>
 
                                     @php
