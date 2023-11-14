@@ -56,4 +56,57 @@ class HomeController extends Controller
         });
         return view('home', compact('home', 'selectedDate', 'tempWaterIn', 'tempWaterOut', 'tempOilIn', 'tempOilOut', 'batasMidnight'));
     }
+
+    public function rentangA()
+    {
+        // Hitung tanggal awal sebagai 15 hari yang lalu dari hari ini
+        $startDate = now()->startOfMonth(); // Mengambil awal bulan ini
+
+        // Hitung tanggal akhir sebagai 15 hari setelah tanggal awal
+        $endDate = $startDate->copy()->addDays(14); // Mengambil tanggal setelah 15 hari
+
+        // Load data for the specified date range
+        $data = Input3::whereDate('created_at', '>=', $startDate)
+            ->whereDate('created_at', '<=', $endDate)
+            ->selectRaw('DATE(created_at) as date, AVG(temp_water_in) as avg_temp_water_in, AVG(temp_water_out) as avg_temp_water_out, AVG(temp_oil_in) as avg_temp_oil_in, AVG(temp_oil_out) as avg_temp_oil_out')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
+
+        // Combine the data for hours 7 to 23 and hours 0 to 6
+        $dashboard = $data;
+        $dates = $data->pluck('date');
+        $tempWaterIn = $data->pluck('avg_temp_water_in');
+        $tempWaterOut = $data->pluck('avg_temp_water_out');
+        $tempOilIn = $data->pluck('avg_temp_oil_in');
+        $tempOilOut = $data->pluck('avg_temp_oil_out');
+
+        return view('dashboardA', compact('dashboard', 'dates', 'tempWaterIn', 'tempWaterOut', 'tempOilIn', 'tempOilOut'));
+    }
+    public function rentangB()
+    {
+        // Hitung tanggal awal sebagai 15 hari yang lalu dari hari ini
+        $startDate = now()->startOfMonth()->addDays(15); // Mengambil awal bulan ini
+
+        // Hitung tanggal akhir sebagai 15 hari setelah tanggal awal
+        $endDate = now()->endOfMonth(); // Mengambil tanggal setelah 15 hari
+
+        // Load data for the specified date range
+        $data = Input3::whereDate('created_at', '>=', $startDate)
+            ->whereDate('created_at', '<=', $endDate)
+            ->selectRaw('DATE(created_at) as date, AVG(temp_water_in) as avg_temp_water_in, AVG(temp_water_out) as avg_temp_water_out, AVG(temp_oil_in) as avg_temp_oil_in, AVG(temp_oil_out) as avg_temp_oil_out')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
+
+        // Combine the data for hours 7 to 23 and hours 0 to 6
+        $dashboard = $data;
+        $dates = $data->pluck('date');
+        $tempWaterIn = $data->pluck('avg_temp_water_in');
+        $tempWaterOut = $data->pluck('avg_temp_water_out');
+        $tempOilIn = $data->pluck('avg_temp_oil_in');
+        $tempOilOut = $data->pluck('avg_temp_oil_out');
+
+        return view('dashboardB', compact('dashboard', 'dates', 'tempWaterIn', 'tempWaterOut', 'tempOilIn', 'tempOilOut'));
+    }
 }

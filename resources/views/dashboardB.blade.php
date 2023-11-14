@@ -18,7 +18,7 @@
                     <div class="card-header">
                         <h4 data-id="input1ListData">Menu Report All
                             <br>
-                            <span style="font-size: 13px;">Tanggal: {{ \Carbon\Carbon::parse($selectedDate)->format('d M Y') }}</span>
+                            <span style="font-size: 13px;">Tanggal: {{ \Carbon\Carbon::now()->startOfMonth()->addDays(15)->format('d M Y') }} - {{ \Carbon\Carbon::now()->endOfMonth()->format('d M Y') }}</span>
                         </h4>
                         <div class="card-header-action">
                             <div class="dropdown">
@@ -66,7 +66,7 @@
             <script src="https://code.highcharts.com/highcharts.js"></script>
             <script>
                 // Data retrieved https://en.wikipedia.org/wiki/List_of_cities_by_average_temperature
-                var batas = <?php echo json_encode($batasMidnight) ?>;
+                var batas = <?php echo json_encode($dates) ?>;
                 var tempWaterIn = <?php echo json_encode($tempWaterIn) ?>;
                 var tempWaterOut = <?php echo json_encode($tempWaterOut) ?>;
                 var tempOilIn = <?php echo json_encode($tempOilIn) ?>;

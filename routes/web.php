@@ -31,6 +31,8 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/dashboard-A', [App\Http\Controllers\HomeController::class, 'rentangA']);
+Route::get('/dashboard-B', [App\Http\Controllers\HomeController::class, 'rentangB']);
 
 Route::resource('user', UserController::class);
 Route::get('/laporan/user', [UserController::class, 'laporan']);
