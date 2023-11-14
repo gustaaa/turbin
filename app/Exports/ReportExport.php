@@ -14,7 +14,6 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 
 class ReportExport implements FromCollection, WithHeadings, ShouldAutoSize, WithTitle, WithStyles
@@ -64,7 +63,7 @@ class ReportExport implements FromCollection, WithHeadings, ShouldAutoSize, With
             ->get();
 
         // Combine the data for hours 7 to 23 and hours 0 to 6
-        $input2Data = $input2->concat($input2Midnight);
+        $input2 = $input2->concat($input2Midnight);
 
         $input3 = Input3::whereDate('created_at', $this->selectedDate)
             ->whereTime('created_at', '>=', '06:00:00')
@@ -81,7 +80,7 @@ class ReportExport implements FromCollection, WithHeadings, ShouldAutoSize, With
             ->get();
 
         // Combine the data for hours 7 to 23 and hours 0 to 6
-        $input3Data = $input3->concat($input3Midnight);
+        $input3 = $input3->concat($input3Midnight);
         // Combine the data from all three inputs
         // Combine the data from all three inputs
         $combinedData = collect([]);

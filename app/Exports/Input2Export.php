@@ -11,6 +11,7 @@ use Maatwebsite\Excel\Concerns\WithTitle;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 
 class Input2Export implements FromCollection, WithHeadings, ShouldAutoSize, WithTitle, WithStyles
 {
@@ -64,12 +65,15 @@ class Input2Export implements FromCollection, WithHeadings, ShouldAutoSize, With
 
     public function headings(): array
     {
+        $formattedDate = $this->selectedDate;
+        // Add the headings for all three inputs
         return [
             ['LOGSHEET TURBIN A/B'],
             ['DEPARTEMEN ELEKTRIK 2023'],
             ['PG GLENMORE'],
+            ['Tanggal: ' . $formattedDate],
             [
-                'Batas',
+                'Jam',
                 'Turbin Speed', // From Input2
                 'Rotor Vibrator Monitor',
                 'Axial Displacement Monitor',
@@ -78,21 +82,76 @@ class Input2Export implements FromCollection, WithHeadings, ShouldAutoSize, With
                 'Exhaust',
                 'Lub Oil',
                 'Control Oil',
+            ], [
+                '',
+                '(RPM)', // From Input2
+                '(mm)',
+                '(mm)',
+                '(kg/cm²G)',
+                '(kg/cm²G)',
+                '(kg/cm²G)',
+                '(kg/cm²G)',
+                '(kg/cm²G)',
+            ], [
+                'Batas',
+                '', // From Input2
+                '0.08',
+                '+0.5/-0.9',
+                '45',
+                '',
+                '<1.7',
+                '',
+                '',
             ]
         ];
     }
     public function styles(Worksheet $sheet)
     {
+        // Set the paper size to A3
+        $sheet->getPageSetup()->setPaperSize(PageSetup::PAPERSIZE_A3);
+
+        // Set the orientation to landscape
+        $sheet->getPageSetup()->setOrientation(PageSetup::ORIENTATION_LANDSCAPE);
+
+        // Merge cells for title and headings (if needed)
         $sheet->mergeCells('A1:I1');
         $sheet->mergeCells('A2:I2');
         $sheet->mergeCells('A3:I3');
-        // Set horizontal alignment to center
-        $sheet->getStyle('A1:I3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->mergeCells('A4:I4');
 
-        // Set vertical alignment to center
-        $sheet->getStyle('A1:I3')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+        $sheet->mergeCells('A5:A6');
 
+        // Set horizontal and vertical alignment to center
+        $sheet->getStyle('A:I')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A:I')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
         // Make the text bold
         $sheet->getStyle('A1:I3')->getFont()->setBold(true);
+
+        // Apply borders to all cells
+        $borderStyle = [
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+            ],
+        ];
+
+        $sheet->getStyle('A5:I' . ($sheet->getHighestRow()))->applyFromArray($borderStyle);
+
+        // Set the font size for the entire sheet to 10
+        $sheet->getParent()->getDefaultStyle()->getFont()->setSize(6);
+
+        // Set the font size for the data to 10 (same as the entire sheet)
+        $sheet->getStyle('A5:I' . ($sheet->getHighestRow()))->getFont()->setSize(6);
+
+        // Center-align the data in all cells
+        $sheet->getStyle('A5:I' . ($sheet->getHighestRow()))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+        $sheet->getStyle('A5:I5')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
+        $sheet->getStyle('A5:I5')->getFill()->getStartColor()->setARGB('99CCFF');
+        $sheet->getStyle('A6:I6')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
+        $sheet->getStyle('A6:I6')->getFill()->getStartColor()->setARGB('99CCFF');
+        $sheet->getStyle('A7:I7')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
+        $sheet->getStyle('A7:I7')->getFill()->getStartColor()->setARGB('99CCFF');
     }
 }
