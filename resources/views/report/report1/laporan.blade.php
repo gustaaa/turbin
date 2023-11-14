@@ -36,6 +36,12 @@
                 font-size: 10px;
                 text-align: left;
             }
+
+            .table th.column-header {
+                background-color: lightgray;
+            }
+
+            /* Tambahkan properti CSS tambahan sesuai kebutuhan */
         </style>
     </head>
 
@@ -53,17 +59,42 @@
                 <br>
                 <table class="table table-bordered">
                     <tr>
-                        <th>Created At</th>
-                        <th>Inlet Steam</th>
-                        <th>Exm Steam</th>
-                        <th>Turbin thrust bearing</th>
-                        <th>TB Gov Side</th>
-                        <th>TB Coup Side</th>
-                        <th>PB tbn side</th>
-                        <th>PB gen side</th>
-                        <th>WB tbn side</th>
-                        <th>WB gen side</th>
-                        <th>OC lub oil outlet</th>
+                        <th rowspan="2" class="center-text text-center column-header" style="vertical-align: middle;">Jam</th>
+                        <th class="text-center column-header">Inlet Steam</th>
+                        <th class="text-center column-header">Exm Steam</th>
+                        <th class="text-center column-header">Turbin thrust bearing</th>
+                        <th class="text-center column-header">TB Gov Side</th>
+                        <th class="text-center column-header">TB Coup Side</th>
+                        <th class="text-center column-header">PB tbn side</th>
+                        <th class="text-center column-header">PB gen side</th>
+                        <th class="text-center column-header">WB tbn side</th>
+                        <th class="text-center column-header">WB gen side</th>
+                        <th class="text-center column-header">OC lub oil outlet</th>
+                    </tr>
+                    <tr>
+                        <th class="text-center column-header">(&deg;C)</th>
+                        <th class="text-center column-header">(&deg;C)</th>
+                        <th class="text-center column-header">(&deg;C)</th>
+                        <th class="text-center column-header">(&deg;C)</th>
+                        <th class="text-center column-header">(&deg;C)</th>
+                        <th class="text-center column-header">(&deg;C)</th>
+                        <th class="text-center column-header">(&deg;C)</th>
+                        <th class="text-center column-header">(&deg;C)</th>
+                        <th class="text-center column-header">(&deg;C)</th>
+                        <th class="text-center column-header">(&deg;C)</th>
+                    </tr>
+                    <tr>
+                        <th class="text-center column-header">Batas</th>
+                        <th class="text-center column-header">450</th>
+                        <th class="text-center column-header"></th>
+                        <th class="text-center column-header">70</th>
+                        <th class="text-center column-header">70</th>
+                        <th class="text-center column-header">70</th>
+                        <th class="text-center column-header">70</th>
+                        <th class="text-center column-header">70</th>
+                        <th class="text-center column-header">70</th>
+                        <th class="text-center column-header">70</th>
+                        <th class="text-center column-header">50</th>
                     </tr>
                     @php
                     $groupSize = 8;

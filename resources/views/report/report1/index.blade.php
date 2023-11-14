@@ -60,8 +60,8 @@
                             <table class="table table-bordered table-md">
                                 <tbody>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Created At</th>
+                                        <th>No</th>
+                                        <th>Batas</th>
                                         <th data-id="thInletSteam">Inlet Steam</th>
                                         <th data-id="thExmSteam">Exm Steam</th>
                                         <th data-id="thTTB">Turbin thrust bearing</th>

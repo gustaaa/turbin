@@ -36,6 +36,12 @@
             font-size: 10px;
             text-align: left;
         }
+
+        .table th.column-header {
+            background-color: lightgray;
+        }
+
+        /* Tambahkan properti CSS tambahan sesuai kebutuhan */
     </style>
 </head>
 
@@ -53,17 +59,36 @@
             <br>
             <table class="table table-bordered">
                 <tr>
-
-                    <th>Created At</th>
-                    <th>Turbin Speed</th>
-                    <th>Rotor Vib Monitor</th>
-                    <th>Axial Dis Monitor</th>
-                    <th>Main Steam</th>
-                    <th>Stage Steam</th>
-                    <th>Exhaust</th>
-                    <th>Lub Oil</th>
-                    <th>Control Oil</th>
-
+                    <th rowspan="2" class="center-text text-center column-header" style="vertical-align: middle;">Jam</th>
+                    <th class="text-center column-header">Turbin Speed</th>
+                    <th class="text-center column-header">Rotor Vib Monitor</th>
+                    <th class="text-center column-header">Axial Dis Monitor</th>
+                    <th class="text-center column-header">Main Steam</th>
+                    <th class="text-center column-header">Stage Steam</th>
+                    <th class="text-center column-header">Exhaust</th>
+                    <th class="text-center column-header">Lub Oil</th>
+                    <th class="text-center column-header">Control Oil</th>
+                </tr>
+                <tr>
+                    <th class="text-center column-header">(RPM)</th>
+                    <th class="text-center column-header">(mm)</th>
+                    <th class="text-center column-header">(mm)</th>
+                    <th class="text-center column-header">(Kg/Cm&sup2;G)</th>
+                    <th class="text-center column-header">(Kg/Cm&sup2;G)</th>
+                    <th class="text-center column-header">(Kg/Cm&sup2;G)</th>
+                    <th class="text-center column-header">(Kg/Cm&sup2;G)</th>
+                    <th class="text-center column-header">(Kg/Cm&sup2;G)</th>
+                </tr>
+                <tr>
+                    <th class="text-center column-header">Batas</th>
+                    <th class="text-center column-header"></th>
+                    <th class="text-center column-header">0.08</th>
+                    <th class="text-center column-header">+0.5/-0.9</th>
+                    <th class="text-center column-header">45</th>
+                    <th class="text-center column-header"></th>
+                    <th class="text-center column-header">1.7</th>
+                    <th class="text-center column-header"></th>
+                    <th class="text-center column-header"></th>
                 </tr>
                 @php
                 $groupSize = 8;

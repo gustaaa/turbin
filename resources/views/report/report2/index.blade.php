@@ -57,8 +57,8 @@
                             <table class="table table-bordered table-md">
                                 <tbody>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Created At</th>
+                                        <th>No</th>
+                                        <th>Batas</th>
                                         <th data-id="thTurbinSpeed">Turbin Speed</th>
                                         <th data-id="thRotorVibMonitor">Rotor Vib Monitor</th>
                                         <th data-id="thAxialDisMonitor">Axial Dis Monitor</th>

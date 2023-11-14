@@ -59,8 +59,8 @@
                             <table class="table table-bordered table-md">
                                 <tbody>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Created At</th>
+                                        <th>No</th>
+                                        <th>Batas</th>
                                         <th data-id="thTempWaterIn">Temp Water In</th>
                                         <th data-id="thTempWaterOut">Temp Water Out</th>
                                         <th data-id="thTempOilIn">Temp Oil In</th>

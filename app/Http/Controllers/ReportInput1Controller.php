@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Input1;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\Input1Export;
 use Illuminate\Support\Carbon;

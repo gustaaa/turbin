@@ -36,6 +36,12 @@
             font-size: 10px;
             text-align: left;
         }
+
+        .table th.column-header {
+            background-color: lightgray;
+        }
+
+        /* Tambahkan properti CSS tambahan sesuai kebutuhan */
     </style>
 </head>
 
@@ -53,17 +59,42 @@
             <br>
             <table class="table table-bordered">
                 <tr>
-                    <th>Created At</th>
-                    <th>Temp Water In</th>
-                    <th>Temp Water Out</th>
-                    <th>Temp Oil In</th>
-                    <th>Temp Oil Out</th>
-                    <th>Vacum</th>
-                    <th>Injector</th>
-                    <th>Speed Drop</th>
-                    <th>Load Limit</th>
-                    <th>FLO In</th>
-                    <th>FLO Out</th>
+                    <th rowspan="2" class="center-text text-center column-header" style="vertical-align: middle;">Jam</th>
+                    <th class="text-center column-header">Temp Water In</th>
+                    <th class="text-center column-header">Temp Water Out</th>
+                    <th class="text-center column-header">Temp Oil In</th>
+                    <th class="text-center column-header">Temp Oil Out</th>
+                    <th class="text-center column-header">Vacum</th>
+                    <th class="text-center column-header">Injector</th>
+                    <th class="text-center column-header">Speed Drop</th>
+                    <th class="text-center column-header">Load Limit</th>
+                    <th class="text-center column-header">FLO In</th>
+                    <th class="text-center column-header">FLO Out</th>
+                </tr>
+                <tr>
+                    <th class="text-center column-header">(&deg;C)</th>
+                    <th class="text-center column-header">(&deg;C)</th>
+                    <th class="text-center column-header">(&deg;C)</th>
+                    <th class="text-center column-header">(&deg;C)</th>
+                    <th class="text-center column-header"></th>
+                    <th class="text-center column-header"></th>
+                    <th class="text-center column-header"></th>
+                    <th class="text-center column-header"></th>
+                    <th class="text-center column-header"></th>
+                    <th class="text-center column-header"></th>
+                </tr>
+                <tr>
+                    <th class="text-center column-header">Batas</th>
+                    <th class="text-center column-header"></th>
+                    <th class="text-center column-header"></th>
+                    <th class="text-center column-header"></th>
+                    <th class="text-center column-header"></th>
+                    <th class="text-center column-header"></th>
+                    <th class="text-center column-header"></th>
+                    <th class="text-center column-header"></th>
+                    <th class="text-center column-header"></th>
+                    <th class="text-center column-header"></th>
+                    <th class="text-center column-header"></th>
                 </tr>
                 @php
                 $groupSize = 8;
