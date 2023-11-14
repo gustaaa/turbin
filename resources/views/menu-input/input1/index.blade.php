@@ -55,8 +55,8 @@
                             <table class="table table-bordered table-md">
                                 <tbody>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Created At</th>
+                                        <th>No</th>
+                                        <th>Batas</th>
                                         <th data-id="thInletSteam">Inlet Steam</th>
                                         <th data-id="thExmSteam">Exm Steam</th>
                                         <th data-id="thTTB">Turbin thrust bearing</th>
@@ -71,8 +71,8 @@
                                     </tr>
                                     @foreach($input1 as $key => $data)
                                     <tr>
-                                        <td>{{ ($input1->currentPage() - 1) * $input1->perPage() + $loop->iteration }}</td>
-                                        <td>{{$data->created_at}}</td>
+                                        <td>{{ ($loop->index + 1) }}</td>
+                                        <td>{{$data->created_at->modify('+1 hour')->format('H:00')}}</td>
                                         <td>{{$data->inlet_steam}}</td>
                                         <td>{{$data->exm_steam}}</td>
                                         <td>{{$data->turbin_thrust_bearing}}</td>
@@ -103,9 +103,6 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                            <div class="d-flex justify-content-center">
-                                {{ $input1->withQueryString()->links() }}
-                            </div>
                         </div>
                     </div>
                 </div>

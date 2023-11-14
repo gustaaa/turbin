@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Models\Input1;
+use Illuminate\Support\Carbon;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class Input1Controller extends Controller
@@ -29,25 +29,23 @@ class Input1Controller extends Controller
         if (!$selectedDate) {
             $selectedDate = now()->format('Y-m-d');
         }
-        $input1 = DB::table('input1')
-            ->when($selectedDate, function ($query) use ($selectedDate) {
-                return $query->whereDate('created_at', $selectedDate);
-            })
-            ->select(
-                'id',
-                DB::raw("DATE_FORMAT(created_at, '%H:%i') as created_at"),
-                'inlet_steam',
-                'exm_steam',
-                'turbin_thrust_bearing',
-                'tb_gov_side',
-                'tb_coup_side',
-                'pb_tbn_side',
-                'pb_gen_side',
-                'wb_tbn_side',
-                'wb_gen_side',
-                'oc_lub_oil_outlet'
-            )
-            ->paginate(24);
+
+        // Ambil data untuk jam 7 hingga 23
+        $input1 = Input1::whereDate('created_at', $selectedDate)
+            ->whereTime('created_at', '>=', '06:00:00')
+            ->whereTime('created_at', '<=', '23:59:59')
+            ->get();
+
+        // Ambil data untuk jam 0 hingga 6 dan anggap sebagai data hari sebelumnya
+        // $previousDate = Carbon::parse($selectedDate)->subDay();
+        $nextDate = Carbon::parse($selectedDate)->addDay();
+        $input1Midnight = Input1::whereDate('created_at', $nextDate)
+            ->whereTime('created_at', '>=', '00:00:00')
+            ->whereTime('created_at', '<=', '05:59:59')
+            ->get();
+
+        // Gabungkan data untuk jam 7 hingga 23 dan jam 0 hingga 6
+        $input1 = $input1->concat($input1Midnight);
         return view('menu-input.input1.index', compact('input1', 'selectedDate'));
     }
     public function create()
@@ -63,7 +61,6 @@ class Input1Controller extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            //'user_id' => 'required',
             'inlet_steam' => 'required',
             'exm_steam' => 'required',
             'turbin_thrust_bearing' => 'required',

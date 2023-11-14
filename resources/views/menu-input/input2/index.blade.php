@@ -55,8 +55,8 @@
                             <table class="table table-bordered table-md">
                                 <tbody>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Created At</th>
+                                        <th>No</th>
+                                        <th>Batas</th>
                                         <th data-id="thTurbinSpeed">Turbin Speed</th>
                                         <th data-id="thRotorVibMonitor">Rotor Vib Monitor</th>
                                         <th data-id="thAxialDisMonitor">Axial Dis Monitor</th>
@@ -69,8 +69,8 @@
                                     </tr>
                                     @foreach($input2 as $key => $data)
                                     <tr>
-                                        <td>{{ ($input2->currentPage() - 1) * $input2->perPage() + $loop->iteration }}</td>
-                                        <td>{{$data->created_at}}</td>
+                                        <td>{{ ($loop->index + 1)}}</td>
+                                        <td>{{$data->created_at->modify('+1 hour')->format('H:00')}}</td>
                                         <td>{{$data->turbin_speed}}</td>
                                         <td>{{$data->rotor_vib_monitor}}</td>
                                         <td>{{$data->axial_displacement_monitor}}</td>
@@ -99,9 +99,6 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                            <div class="d-flex justify-content-center">
-                                {{ $input2->withQueryString()->links() }}
-                            </div>
                         </div>
                     </div>
                 </div>
